@@ -2,6 +2,7 @@ return {
   "neovim/nvim-lspconfig",
   version = "*",
   opts = {
+    inlay_hints = { enable = false },
     servers = {
       omnisharp = {
         handlers = {
@@ -23,16 +24,5 @@ return {
         enable_import_completion = true,
       },
     },
-  },
-  setup = {
-    eslint = function()
-      require("lazyvim.util").lsp.on_attach(function(client)
-        if client.name == "eslint" then
-          client.server_capabilities.documentFormattingProvider = true
-        elseif client.name == "tsserver" or client.name == "vtsls" then
-          client.server_capabilities.documentFormattingProvider = false
-        end
-      end)
-    end,
   },
 }
