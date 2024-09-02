@@ -1,3 +1,0 @@
-# 💤 LazyVim
-
-Lazyvim konfigürasyonum
