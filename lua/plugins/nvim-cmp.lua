@@ -1,11 +1,7 @@
 return {
   "hrsh7th/nvim-cmp",
-  dependencies = {
-    "L3MON4D3/LuaSnip", -- add this if you use LuaSnip
-    -- Add any other snippet engine you use
-  },
-  ---@param opts cmp.ConfigSchema
   opts = function(_, opts)
+    vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
     local has_words_before = function()
       unpack = unpack or table.unpack
       local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -13,18 +9,24 @@ return {
     end
 
     local cmp = require("cmp")
-    local luasnip = require("luasnip") -- assuming you use LuaSnip
 
     local has_action = function(action)
       return cmp.get_active_entry() and cmp.get_active_entry().source.name == action
     end
 
+    opts.sources = vim.tbl_filter(function(source)
+      return not vim.tbl_contains({ "buffer", "nvim_lsp" }, source.name)
+    end, opts.sources)
+    table.insert(opts.sources, 1, {
+      name = "nvim_lsp",
+      entry_filter = function(entry, _)
+        return require("cmp.types").lsp.CompletionItemKind[entry:get_kind()] ~= "Text"
+      end,
+    })
     opts.mapping = vim.tbl_extend("force", opts.mapping, {
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item({ select = true })
-        elseif luasnip and luasnip.expand_or_jumpable() then
-          luasnip.expand_or_jump()
         elseif has_words_before() and has_action("nvim_lsp") then
           cmp.complete()
         else
@@ -34,8 +36,6 @@ return {
       ["<S-Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_prev_item()
-        elseif luasnip and luasnip.jumpable(-1) then
-          luasnip.jump(-1)
         else
           fallback()
         end
