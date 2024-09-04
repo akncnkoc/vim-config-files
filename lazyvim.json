@@ -1,6 +1,8 @@
 {
   "extras": [
-    "lazyvim.plugins.extras.coding.mini-surround"
+    "lazyvim.plugins.extras.coding.mini-surround",
+    "lazyvim.plugins.extras.coding.yanky",
+    "lazyvim.plugins.extras.editor.inc-rename"
   ],
   "news": {
     "NEWS.md": "6520"
