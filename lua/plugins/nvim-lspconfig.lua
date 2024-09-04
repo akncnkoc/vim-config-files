@@ -3,6 +3,15 @@ return {
   version = "*",
   opts = {
     inlay_hints = { enable = false },
-    servers = {},
+    servers = {
+      csharp_ls = {
+        root_dir = require("lspconfig/util").root_pattern("*.csproj", "*.sln"),
+        handlers = {
+          ["window/showMessage"] = function(_, result, ctx)
+            -- Suppress the notification
+          end,
+        },
+      },
+    },
   },
 }

@@ -1,5 +1,10 @@
 return {
   "hrsh7th/nvim-cmp",
+  dependencies = {
+    "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/cmp-buffer",
+    "hrsh7th/cmp-path",
+  },
   opts = function(_, opts)
     vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
     local has_words_before = function()
@@ -9,14 +14,18 @@ return {
     end
 
     local cmp = require("cmp")
+    cmp.setup({
+      sources = {
+        { name = "nvim_lsp" },
+        { name = "buffer" },
+        { name = "path" },
+      },
+    })
 
     local has_action = function(action)
       return cmp.get_active_entry() and cmp.get_active_entry().source.name == action
     end
 
-    opts.sources = vim.tbl_filter(function(source)
-      return not vim.tbl_contains({ "buffer", "nvim_lsp" }, source.name)
-    end, opts.sources)
     table.insert(opts.sources, 1, {
       name = "nvim_lsp",
       entry_filter = function(entry, _)
