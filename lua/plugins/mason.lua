@@ -1,6 +1,6 @@
 return {
   "williamboman/mason.nvim",
   opts = {
-    ensure_installed = { "csharpier" },
+    ensure_installed = { "csharpier", "vtsls" },
   },
 }
